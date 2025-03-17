@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Processing Service API
+  description: This API provides event statistics
+  version: "1.0.0"
+  contact:
+    email: yjung35@my.bcit.ca
+
+paths:
+  /stats:
+    get:
+      summary: Gets the event statistics
+      operationId: app.get_stats
+      description: Gets GPS and alerts processed statistics
+      responses:
+        '200':
+          description: Successfully returned a list of my-simple-tracker events
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TrackStats'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    TrackStats:
+      required:
+        - num_gps_events # total number for event 1
+        - num_alert_events # total number for event 2
+        - max_alerts_per_day # the highest number of alerts in a day
+        - peak_gps_activity_day # The highest number of GPS updates in a day
+      properties:
+        num_gps_events:
+          type: integer
+          example: 203
+        num_alert_events:
+          type: integer
+          example: 5
+        max_alerts_per_day:
+          type: integer
+          example: 12
+        peak_gps_activity_day:
+          type: integer
+          example: 45 
+        last_updated:
+          type: string
+          format: date-time
+          example: "2025-02-07T15:45:00"
+      type: object

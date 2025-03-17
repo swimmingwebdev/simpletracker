@@ -1,0 +1,10 @@
+---
+version: 1
+eventstore1:
+  url: http://storage:8090/track/locations
+eventstore2:
+  url: http://storage:8090/track/alerts
+events:
+  hostname: kafka
+  port: 29092
+  topic: events

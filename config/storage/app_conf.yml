@@ -1,0 +1,12 @@
+---
+version: 1
+datastore:
+  user: mysqluser
+  password: 1234
+  hostname: mysql
+  port: 3306
+  db: mysimpletracker
+events:
+  hostname: kafka
+  port: 29092
+  topic: events

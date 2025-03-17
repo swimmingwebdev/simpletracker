@@ -1,0 +1,119 @@
+---
+openapi: 3.0.0
+info:
+  title: Simple GPS tracking API
+  description: Simple API for tracking reports and alerts
+  contact:
+    email: yjung35@my.bcit.ca
+  version: 1.0.0
+paths:
+  /track/locations:
+    post:
+      summary: Report location
+      description: Adds GPS data to the system.
+      operationId: app.trackGPS
+      requestBody:
+        description: Location report to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackGPS'
+      responses:
+        "201":
+          description: GPS successfully added.
+        "400":
+          description: Invalid input, object invalid.
+  /track/alerts:
+    post:
+      summary: Add alerts for unexpected information
+      description: Adds alerts and notifications to the system.
+      operationId: app.trackAlerts
+      requestBody:
+        description: Alerts to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackAlerts'
+      responses:
+        "201":
+          description: Alerts successfully added.
+        "400":
+          description: Invalid input, object invalid.
+components:
+  schemas:
+    TrackGPS:
+      type: object
+      required:
+        - device_id
+        - latitude
+        - longitude
+        - location_name
+        - timestamp
+      properties:
+        device_id:
+          type: string
+          description: Unique identifier for the tracking device.
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        latitude:
+          type: number
+          format: float
+          description: Latitude of the tracked location.
+          example: 12.134567
+        longitude:
+          type: number
+          format: float
+          description: Longitude of the tracked location.
+          example: 56.123456
+        location_name:
+          type: string
+          description: Human-readable name of the location.
+          example: "Downtown Vancouver"
+        timestamp:
+          type: string
+          description: The date and time when the location was tracked.
+          format: date-time
+          example: 2025-01-07T12:34:56.001Z
+    
+    TrackAlerts:
+      type: object
+      required:
+        - device_id
+        - latitude
+        - longitude
+        - location_name
+        - alert_desc
+        - timestamp
+      properties:
+        device_id:
+          type: string
+          description: Unique identifier for the device reporting the alert.
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        latitude:
+          type: number
+          format: float
+          description: Latitude where the alert occurred.
+          example: 12.134567
+        longitude:
+          type: number
+          format: float
+          description: Longitude where the alert occurred.
+          example: 56.123456
+        location_name:
+          type: string
+          description: Human-readable name of the location where the alert occurred.
+          example: "Downtown Vancouver"
+        alert_desc:
+          type: string
+          description: Detailed description of the alert.
+          example: "Unexpected movement detected."
+        timestamp:
+          type: string
+          description: The date and time when the alert was recorded.
+          format: date-time
+          example: 2025-01-07T12:34:56.001Z
+
+

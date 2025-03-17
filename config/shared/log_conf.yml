@@ -1,0 +1,43 @@
+---
+version: 1
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+    
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    filename: /app/logs/app.log
+
+loggers:
+  analyzerLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+
+  receiverLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+
+  storageLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+
+  processingLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no        
+
+root:
+  level: DEBUG
+  handlers: [console]
+disable_existing_loggers: false

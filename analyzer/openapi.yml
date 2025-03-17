@@ -1,0 +1,186 @@
+---
+openapi: 3.0.0
+info:
+  title: Audit API
+  description: This API provides audit info
+  version: 1.0.0
+  contact:
+    email: yjung35@my.bcit.ca
+
+paths:
+  /track/locations:
+    get:
+      summary: Get a location tracking data from histroy
+      operationId: app.get_trackGPS_reading      
+      description: Retrieves all GPS tracking data readings from the event store
+      parameters:
+        - name: index
+          in: query
+          description: Get the trackGPS at the index in the event store
+          schema:
+            type: integer
+            example: 100
+      responses:
+        "200":
+          description: Successfully retrieved trackGPS event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackGPSReading'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string  
+
+  /track/alerts:
+    get:  
+      summary: Get alert events reading from histroy
+      operationId: app.get_trackAlerts_reading
+      description: Retrieves all alert events reding from the evnet store
+      parameters:
+        - name: index
+          in: query
+          description: Gets alert event at given index in event store
+          schema:
+            type: integer
+            example: 100
+      responses:
+        "200":
+          description: Successfully returned an alert event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackAlertsReading'
+        "400":
+          description: Invalid request        
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string 
+
+  /stats:
+    get:
+      summary: Gets the event statistics
+      operationId: app.get_event_stats
+      description: Retrieves statistics about the events
+      responses:
+        '200':
+          description: Successfully returned event statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stats'
+
+components:
+  schemas:
+    TrackGPSReading:
+      type: object
+      required:
+        - device_id
+        - latitude
+        - longitude
+        - location_name
+        - timestamp
+      properties:
+        device_id:
+          type: string
+          description: Unique identifier for the tracking device.
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        latitude:
+          type: number
+          format: float
+          description: Latitude of the tracked location.
+          example: 12.134567
+        longitude:
+          type: number
+          format: float
+          description: Longitude of the tracked location.
+          example: 56.123456
+        location_name:
+          type: string
+          description: Human-readable name of the location.
+          example: "Downtown Vancouver"
+        timestamp:
+          type: string
+          description: The date and time when the location was tracked.
+          format: date-time
+          example: 2025-01-07T12:34:56.001Z
+    
+    TrackAlertsReading:
+      type: object
+      required:
+        - device_id
+        - latitude
+        - longitude
+        - location_name
+        - alert_desc
+        - timestamp
+      properties:
+        device_id:
+          type: string
+          description: Unique identifier for the device reporting the alert.
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        latitude:
+          type: number
+          format: float
+          description: Latitude where the alert occurred.
+          example: 12.134567
+        longitude:
+          type: number
+          format: float
+          description: Longitude where the alert occurred.
+          example: 56.123456
+        location_name:
+          type: string
+          description: Human-readable name of the location where the alert occurred.
+          example: "Downtown Vancouver"
+        alert_desc:
+          type: string
+          description: Detailed description of the alert.
+          example: "Unexpected movement detected."
+        timestamp:
+          type: string
+          description: The date and time when the alert was recorded.
+          format: date-time
+          example: 2025-01-07T12:34:56.001Z
+
+    Stats:
+      type: object
+      required:
+      - num_gps_events
+      - num_alert_events
+      properties:
+        num_gps_events:
+          type: integer
+          example: 100
+        num_alert_events:
+          type: integer
+          example: 100
