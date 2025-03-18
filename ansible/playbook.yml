@@ -44,10 +44,12 @@
         dest: "{{ app_dir }}"
         update: yes
         version: main
+        key_file: "/home/ubuntu/.ssh/git_deploy_key"
+        accept_hostkey: yes
       
     - name: Copy production config files
       copy:
-        src: "config/{{ item }}/app.prod.yml"
+        src: "{{ playbook_dir }}/files/config/{{ item }}/app.prod.yml"
         dest: "{{ app_dir }}/config/{{ item }}/app_conf.yml"
       loop:
         - analyzer
@@ -57,7 +59,7 @@
     
     - name: Copy log production config file
       copy:
-        src: "config/shared/log.prod.yml"
+        src: "{{ playbook_dir }}/files/config/shared/log.prod.yml"
         dest: "{{ app_dir }}/config/shared/log_conf.yml"
 
     # Run Docker Compose
