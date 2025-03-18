@@ -46,6 +46,7 @@
         version: main
         key_file: "/home/ubuntu/.ssh/git_deploy_key"
         accept_hostkey: yes
+        force: true
       
     - name: Copy production config files
       copy:
