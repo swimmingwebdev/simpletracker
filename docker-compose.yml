@@ -24,7 +24,6 @@ services:
       - ./config/shared/log_conf.yml:/config/log_conf.yml   
       - ./logs/storage:/app/logs
       - ./data/database:/app/data/database 
-      - ./data/kafka:/app/data/kafka 
     depends_on:
       db:
         condition: service_healthy
