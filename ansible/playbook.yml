@@ -64,6 +64,6 @@
 
     # Run Docker Compose
     - name: Run Docker Compose
-      shell: docker compose up -d
+      shell: docker compose up -d --build
       args:
         chdir: "{{ app_dir }}"
