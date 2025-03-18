@@ -1,0 +1,67 @@
+---
+- name: Deploy Services to AWS VM
+  hosts: aws_vm
+  become: yes
+
+  vars:
+    repo_url: git@github.com:swimmingwebdev/simpletracker.git
+    app_dir: /home/ubuntu/simpletracker
+    
+  tasks:
+    # setup docker        
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+     
+    - name: Ensure user is in docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    # create directories     
+    - name: Create directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      loop:
+        - "{{ app_dir }}/data"
+        - "{{ app_dir }}/data/database"
+        - "{{ app_dir }}/data/kafka"
+        - "{{ app_dir }}/logs"
+        - "{{ app_dir }}/logs/analyzer"
+        - "{{ app_dir }}/logs/processing"
+        - "{{ app_dir }}/logs/receiver"
+        - "{{ app_dir }}/logs/storage"
+
+    - name: Update the repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        update: yes
+        version: main
+      
+    - name: Copy production config files
+      copy:
+        src: "config/{{ item }}/app.prod.yml"
+        dest: "{{ app_dir }}/config/{{ item }}/app_conf.yml"
+      loop:
+        - analyzer
+        - processing
+        - receiver
+        - storage
+    
+    - name: Copy log production config file
+      copy:
+        src: "config/shared/log.prod.yml"
+        dest: "{{ app_dir }}/config/shared/log_conf.yml"
+
+    # Run Docker Compose
+    - name: Run Docker Compose
+      shell: docker compose up -d
+      args:
+        chdir: "{{ app_dir }}"
