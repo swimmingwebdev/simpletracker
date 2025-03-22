@@ -3,3 +3,4 @@ connexion[uvicorn]
 connexion[swagger-ui]
 httpx
 apscheduler
+starlette

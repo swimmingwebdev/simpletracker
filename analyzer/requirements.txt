@@ -4,3 +4,4 @@ connexion[swagger-ui]
 pykafka
 httpx
 setuptools
+starlette

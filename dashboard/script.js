@@ -1,7 +1,7 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
 const CLOUD_VM_DNS = "34.234.232.11" 
-const PROCESSING_STATS_API = `http://${CLOUD_VM_DNS}:8100/stats.json`
+const PROCESSING_STATS_API = `http://${CLOUD_VM_DNS}:8100/stats`
 const ANALYZER_API = {
     stats: `http://${CLOUD_VM_DNS}:8110/stats`,
     trackGPS: `http://${CLOUD_VM_DNS}:8110/track/locations`,
