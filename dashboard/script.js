@@ -55,6 +55,33 @@ const getStats = () => {
     })
 }
 
+const fetchGpsEvent = () => {
+    const index = document.getElementById("gps-index").value;
+    fetch(`${ANALYZER_API.trackGPS}?index=${index}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("event-gps").innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            document.getElementById("event-gps").innerText = "Error fetching GPS event";
+            console.error(err);
+        });
+};
+
+const fetchAlertEvent = () => {
+    const index = document.getElementById("alert-index").value;
+    fetch(`${ANALYZER_API.trackAlerts}?index=${index}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("event-alert").innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            document.getElementById("event-alert").innerText = "Error fetching Alert event";
+            console.error(err);
+        });
+};
+
+
 const updateErrorMessages = (message) => {
     const id = Date.now()
     console.log("Creation", id)
@@ -73,6 +100,9 @@ const updateErrorMessages = (message) => {
 const setup = () => {
     getStats()
     setInterval(() => getStats(), 4000) // Update every 4 seconds
+
+    document.getElementById("fetch-gps-btn").addEventListener("click", fetchGpsEvent);
+    document.getElementById("fetch-alert-btn").addEventListener("click", fetchAlertEvent);
 }
 
 document.addEventListener('DOMContentLoaded', setup)
