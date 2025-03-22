@@ -60,6 +60,17 @@ services:
       kafka:
        condition: service_healthy
   
+  dashboard:
+    container_name: dashboard
+    build:
+      context: dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - processing
+      - analyzer
+
   zookeeper:
     container_name: zookeeper
     image: wurstmeister/zookeeper
@@ -71,8 +82,8 @@ services:
     container_name: kafka
     image: wurstmeister/kafka
     command: [start-kafka.sh]
-    ports:
-      - "9092:9092"
+    expose:
+      - "9092"
     environment:
       KAFKA_CREATE_TOPICS: "events:1:1" # topic:partition:replicas
       KAFKA_ADVERTISED_HOST_NAME: kafka # docker-machine ip

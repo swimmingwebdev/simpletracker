@@ -7,6 +7,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import os
 import httpx
 import asyncio
+from connexion.middleware import MiddlewarePosition
+from starlette.middleware.cors import CORSMiddleware
+
 
 # Configurations
 with open("/app/config/app_conf.yml", "r") as f:
@@ -151,6 +154,15 @@ def init_scheduler():
 
 app = connexion.FlaskApp(__name__, specification_dir=".")
 app.add_api("openapi.yml", strict_validation=True, validate_responses=True)
+
+app.add_middleware(
+    CORSMiddleware,
+    position=MiddlewarePosition.BEFORE_EXCEPTION,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     logger.info("Processing Service started")
