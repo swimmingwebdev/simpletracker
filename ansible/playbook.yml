@@ -37,6 +37,7 @@
         - "{{ app_dir }}/logs/processing"
         - "{{ app_dir }}/logs/receiver"
         - "{{ app_dir }}/logs/storage"
+        - "{{ app_dir }}/dashboard" 
 
     - name: Update the repository
       git:
