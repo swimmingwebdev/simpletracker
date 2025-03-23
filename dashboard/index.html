@@ -11,8 +11,12 @@
     <title>ACIT3855 - mySimpleTracker</title>
     <style>
         .logo {
-            max-width: 150px;
+            max-width: 300px;
             height: auto;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -22,27 +26,27 @@
         <div id="header" class="flex justify-between items-center">
             <img src="logo.png" alt="System Logo" class="logo">
         </div>
-
+        
         <h1 class="mt-6 text-3xl font-bold">Dashboard</h1>
         <h5 id="last-updated" class="mt-2 text-gray-400">Last update: <span id="last-updated-value">N/A</span></h5>
 
         <h2 class="mt-6 text-2xl font-semibold">Processing Statistics</h2>
-        <div id="statistics" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <div id="processing" class="p-4 bg-gray-800 rounded-lg">
+        <div class="mt-3">
+            <div id="processing" class="p-4 bg-gray-800 rounded-lg w-full">
                 <code id="processing-stats" class="text-green-400">Loading processing stats...</code>
             </div>
         </div>
 
         <h2 class="mt-6 text-2xl font-semibold">Analyzer Statistics</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <div id="analyzer" class="p-4 bg-gray-800 rounded-lg">
+        <div class="mt-3">
+            <div id="analyzer" class="p-4 bg-gray-800 rounded-lg w-full">
                 <code id="analyzer-stats" class="text-blue-400">Loading analyzer stats...</code>
             </div>
         </div>
 
         <h2 class="mt-6 text-2xl font-semibold">Events</h2>
-        <div id="events" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-            <div class="p-4 bg-gray-800 rounded-lg">
+        <div class="mt-3">
+            <div class="p-4 bg-gray-800 rounded-lg w-full mb-4">
                 <h3 class="text-lg font-semibold">TrackGPS Event</h3>
                 <div class="mt-2">
                     <label for="gps-index" class="block text-sm text-gray-400">Event Index:</label>
@@ -51,13 +55,14 @@
                             class="w-20 mr-2 px-2 py-1 bg-gray-700 text-white rounded-md">
                         <button id="fetch-gps-btn" 
                             class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Fetch
+                            Update
                         </button>
                     </div>
                 </div>
-                <pre id="event-gps" class="mt-3 p-3 bg-gray-900 rounded text-yellow-400 text-sm overflow-auto max-h-40">No event loaded</pre>
+                <pre id="event-gps" class="mt-3 p-3 bg-gray-900 rounded text-yellow-400 text-sm">No event loaded</pre>
             </div>
-            <div class="p-4 bg-gray-800 rounded-lg">
+            
+            <div class="p-4 bg-gray-800 rounded-lg w-full">
                 <h3 class="text-lg font-semibold">TrackAlerts Event</h3>
                 <div class="mt-2">
                     <label for="alert-index" class="block text-sm text-gray-400">Event Index:</label>
@@ -66,14 +71,13 @@
                             class="w-20 mr-2 px-2 py-1 bg-gray-700 text-white rounded-md">
                         <button id="fetch-alert-btn" 
                             class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Fetch
+                            Update
                         </button>
                     </div>
                 </div>
-                <pre id="event-alert" class="mt-3 p-3 bg-gray-900 rounded text-red-400 text-sm overflow-auto max-h-40">No event loaded</pre>
+                <pre id="event-alert" class="mt-3 p-3 bg-gray-900 rounded text-red-400 text-sm">No event loaded</pre>
             </div>
         </div>
     </main>
-
 </body>
 </html>

@@ -20,7 +20,21 @@ const makeReq = (url, cb) => {
         })
 }
 
-const updateCodeDiv = (result, elemId) => document.getElementById(elemId).innerText = JSON.stringify(result)
+const updateCodeDiv = (result, elemId) => {
+    const elem = document.getElementById(elemId);
+    if (!elem) return;
+    
+    // For statistics, display in simple format
+    if (typeof result === 'object') {
+        let text = '';
+        for (const [key, value] of Object.entries(result)) {
+            text += `${key}: ${value}\n`;
+        }
+        elem.innerText = text;
+    } else {
+        elem.innerText = result;
+    }
+}
 
 const getLocaleDateStr = () => (new Date()).toLocaleString()
 
@@ -60,7 +74,12 @@ const fetchGpsEvent = () => {
     fetch(`${ANALYZER_API.trackGPS}?index=${index}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("event-gps").innerText = JSON.stringify(data, null, 2);
+            // document.getElementById("event-gps").innerText = JSON.stringify(data, null, 2);
+            let eventText = '';
+            for (const [key, value] of Object.entries(data)) {
+                eventText += `${key}: ${value}\n`;
+            }
+            document.getElementById("event-gps").innerText = eventText;
         })
         .catch(err => {
             document.getElementById("event-gps").innerText = "Error fetching GPS event";
@@ -73,7 +92,12 @@ const fetchAlertEvent = () => {
     fetch(`${ANALYZER_API.trackAlerts}?index=${index}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("event-alert").innerText = JSON.stringify(data, null, 2);
+            // document.getElementById("event-alert").innerText = JSON.stringify(data, null, 2);
+            let eventText = '';
+            for (const [key, value] of Object.entries(data)) {
+                eventText += `${key}: ${value}\n`;
+            }
+            document.getElementById("event-alert").innerText = eventText;
         })
         .catch(err => {
             document.getElementById("event-alert").innerText = "Error fetching Alert event";
