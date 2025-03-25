@@ -103,10 +103,10 @@ services:
     depends_on:
       - zookeeper
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:29092 --list"]
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:29092 --list || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   db:
     container_name: mysql
