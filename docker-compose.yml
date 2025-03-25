@@ -1,6 +1,7 @@
 services:
   receiver:
     container_name: receiver
+    restart: always
     build:
       context: receiver
       dockerfile: Dockerfile
@@ -16,6 +17,7 @@ services:
 
   storage:
     container_name: storage
+    restart: always
     build:
       context: storage
       dockerfile: Dockerfile
@@ -32,6 +34,7 @@ services:
 
   processing:
     container_name: processing
+    restart: always
     build:
       context: processing
       dockerfile: Dockerfile
@@ -49,6 +52,7 @@ services:
              
   analyzer:
     container_name: analyzer
+    restart: always
     build:
       context: analyzer
       dockerfile: Dockerfile
@@ -66,6 +70,7 @@ services:
   
   dashboard:
     container_name: dashboard
+    restart: always
     build:
       context: dashboard
       dockerfile: Dockerfile
@@ -79,6 +84,7 @@ services:
   zookeeper:
     container_name: zookeeper
     image: wurstmeister/zookeeper
+    restart: always
     volumes:
       - zookeeper-data:/data
       - zookeeper-log:/datalog
@@ -87,11 +93,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: always
+
 
   kafka:
     container_name: kafka
     image: wurstmeister/kafka
+    restart: always
     command: [start-kafka.sh]
     expose:
       - "9092"
