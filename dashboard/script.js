@@ -1,11 +1,11 @@
 /* UPDATE THESE VALUES TO MATCH YOUR SETUP */
 
 const CLOUD_VM_DNS = "34.234.232.11" 
-const PROCESSING_STATS_API = `http://${CLOUD_VM_DNS}/processing/stats`
+const PROCESSING_STATS_API = `http://${CLOUD_VM_DNS}:8100/stats`
 const ANALYZER_API = {
-    stats: `http://${CLOUD_VM_DNS}/analyzer/stats`,
-    trackGPS: `http://${CLOUD_VM_DNS}/analyzer/track/locations`,
-    trackAlerts: `http://${CLOUD_VM_DNS}/analyzer/track/alerts`
+    stats: `http://${CLOUD_VM_DNS}:8110/stats`,
+    trackGPS: `http://${CLOUD_VM_DNS}:8110/track/locations`,
+    trackAlerts: `http://${CLOUD_VM_DNS}:8110/track/alerts`
 }
 
 // This function fetches and updates the general statistics
