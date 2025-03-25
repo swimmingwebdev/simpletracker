@@ -99,7 +99,7 @@ services:
     depends_on:
       - zookeeper
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:9092 --list"]
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:29092 --list"]
       interval: 10s
       timeout: 5s
       retries: 5
