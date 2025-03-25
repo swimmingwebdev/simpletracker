@@ -5,8 +5,8 @@ services:
     build:
       context: receiver
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     volumes:
       - ./config/receiver:/app/config
       - ./config/shared/log_conf.yml:/config/log_conf.yml
@@ -40,8 +40,8 @@ services:
       dockerfile: Dockerfile
     environment:
       CORS_ALLOW_ALL: no
-    ports:
-      - "8100:8100"
+    expose:
+      - "8100"
     volumes:
       - ./config/processing:/app/config
       - ./config/shared/log_conf.yml:/config/log_conf.yml
@@ -58,8 +58,8 @@ services:
       dockerfile: Dockerfile
     environment:    
       CORS_ALLOW_ALL: no
-    ports:
-      - "8110:8110"
+    expose:
+      - "8110"
     volumes:
       - ./config/analyzer:/app/config  
       - ./config/shared/log_conf.yml:/config/log_conf.yml
@@ -76,10 +76,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - processing
       - analyzer
-
 
   zookeeper:
     container_name: zookeeper

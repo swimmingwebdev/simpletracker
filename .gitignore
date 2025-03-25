@@ -4,4 +4,3 @@ __pycache__
 *.pyc
 .env
 *.prod.yml
-/nginx
