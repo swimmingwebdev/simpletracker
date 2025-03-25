@@ -68,8 +68,12 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - processing
-      - analyzer
+      processing:
+        condition: service_started
+      analyzer:
+        condition: service_started
+      kafka:
+        condition: service_healthy
 
   zookeeper:
     container_name: zookeeper
