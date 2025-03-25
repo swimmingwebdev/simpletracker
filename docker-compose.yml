@@ -72,8 +72,6 @@ services:
         condition: service_started
       analyzer:
         condition: service_started
-      kafka:
-        condition: service_healthy
 
   zookeeper:
     container_name: zookeeper
@@ -81,6 +79,12 @@ services:
     volumes:
       - zookeeper-data:/data
       - zookeeper-log:/datalog
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
 
   kafka:
     container_name: kafka
@@ -101,12 +105,13 @@ services:
       - ./data/kafka:/kafka
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:29092 --list || exit 1"]
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:29092 --list"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
 
   db:
     container_name: mysql
