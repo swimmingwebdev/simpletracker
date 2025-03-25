@@ -35,6 +35,8 @@ services:
     build:
       context: processing
       dockerfile: Dockerfile
+      environment:
+        CORS_ALLOW_ALL: no
     ports:
       - "8100:8100"
     volumes:
@@ -50,6 +52,8 @@ services:
     build:
       context: analyzer
       dockerfile: Dockerfile
+      environment:    
+        CORS_ALLOW_ALL: no
     ports:
       - "8110:8110"
     volumes:
@@ -68,10 +72,9 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      processing:
-        condition: service_started
-      analyzer:
-        condition: service_started
+      - processing
+      - analyzer
+
 
   zookeeper:
     container_name: zookeeper
