@@ -1,6 +1,5 @@
 services:
   receiver:
-    container_name: receiver
     restart: always
     build:
       context: receiver
@@ -16,7 +15,6 @@ services:
         condition: service_healthy
 
   storage:
-    container_name: storage
     restart: always
     build:
       context: storage
@@ -33,7 +31,6 @@ services:
         condition: service_healthy  
 
   processing:
-    container_name: processing
     restart: always
     build:
       context: processing
@@ -51,7 +48,6 @@ services:
       - storage
              
   analyzer:
-    container_name: analyzer
     restart: always
     build:
       context: analyzer
@@ -69,7 +65,6 @@ services:
        condition: service_healthy
   
   dashboard:
-    container_name: dashboard
     restart: always
     build:
       context: dashboard
