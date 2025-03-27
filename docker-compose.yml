@@ -39,7 +39,7 @@ services:
       context: processing
       dockerfile: Dockerfile
     environment:
-      CORS_ALLOW_ALL: yes
+      CORS_ALLOW_ALL: no
     expose:
       - "8100"
     volumes:
@@ -57,7 +57,7 @@ services:
       context: analyzer
       dockerfile: Dockerfile
     environment:    
-      CORS_ALLOW_ALL: yes
+      CORS_ALLOW_ALL: no
     expose:
       - "8110"
     volumes:
