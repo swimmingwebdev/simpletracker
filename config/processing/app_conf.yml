@@ -6,6 +6,6 @@ scheduler:
   interval: 5
 eventstores:
   track_locations:
-    url: http://storage:8090/track/locations
+    url: http://storage:8090/storage/track/locations
   track_alerts:
-    url: http://storage:8090/track/alerts
+    url: http://storage:8090/storage/track/alerts
