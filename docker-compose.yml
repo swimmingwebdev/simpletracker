@@ -1,6 +1,8 @@
 services:
   receiver:
     restart: always
+    deploy:
+      replicas: 3
     build:
       context: receiver
       dockerfile: Dockerfile
