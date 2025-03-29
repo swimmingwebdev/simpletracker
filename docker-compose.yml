@@ -140,6 +140,6 @@ services:
       timeout: 5s
       retries: 3
 
-volumes:
-  zookeeper-data:
-  zookeeper-log:
+# volumes:
+#   zookeeper-data:
+#   zookeeper-log:
