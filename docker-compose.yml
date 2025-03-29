@@ -83,9 +83,9 @@ services:
     container_name: zookeeper
     image: wurstmeister/zookeeper
     restart: always
-    volumes:
-      - zookeeper-data:/data
-      - zookeeper-log:/datalog
+    # volumes:
+    #   - zookeeper-data:/data
+    #   - zookeeper-log:/datalog
     healthcheck:
       test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
       interval: 10s
@@ -140,6 +140,6 @@ services:
       timeout: 5s
       retries: 3
 
-# volumes:
-#   zookeeper-data:
-#   zookeeper-log:
+volumes:
+  zookeeper-data:
+  zookeeper-log:
