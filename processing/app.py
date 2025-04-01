@@ -20,7 +20,7 @@ log_directory = "/app/logs"
 if not os.path.exists(log_directory):
     os.makedirs(log_directory)
 
-# Logging
+# Logging file
 with open('/config/log_conf.yml', 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
