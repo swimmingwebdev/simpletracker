@@ -1,6 +1,7 @@
 services:
   receiver:
     restart: always
+    user: nobody
     deploy:
       replicas: 3
     build:
@@ -18,6 +19,7 @@ services:
 
   storage:
     restart: always
+    user: nobody
     build:
       context: storage
       dockerfile: Dockerfile
@@ -34,6 +36,7 @@ services:
 
   processing:
     restart: always
+    user: nobody
     build:
       context: processing
       dockerfile: Dockerfile
@@ -51,6 +54,7 @@ services:
              
   analyzer:
     restart: always
+    user: nobody
     build:
       context: analyzer
       dockerfile: Dockerfile
@@ -68,6 +72,7 @@ services:
   
   dashboard:
     restart: always
+    user: nobody
     build:
       context: dashboard
       dockerfile: Dockerfile
