@@ -170,3 +170,4 @@ if __name__ == "__main__":
     logger.info("Starting Analyzer Service")
     setup_kafka_thread()
     app.run(port=8110, host="0.0.0.0")
+    
