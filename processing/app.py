@@ -1,10 +1,11 @@
 import connexion
 from datetime import datetime, timezone
+import os
+import json
 import yaml 
 import logging.config
-import json
 from apscheduler.schedulers.background import BackgroundScheduler
-import os
+
 import httpx
 import asyncio
 from connexion.middleware import MiddlewarePosition
@@ -16,9 +17,9 @@ with open("/app/config/app_conf.yml", "r") as f:
     app_config = yaml.safe_load(f.read())
 
 # Make sure the logs directory exists
-log_directory = "/app/logs"
-if not os.path.exists(log_directory):
-    os.makedirs(log_directory)
+LOG_DIRECTORY = "/app/logs"
+if not os.path.exists(LOG_DIRECTORY):
+    os.makedirs(LOG_DIRECTORY)
 
 # Logging file
 with open('/config/log_conf.yml', 'r') as f:
@@ -51,7 +52,7 @@ def initialize_stats():
             json.dump(stats, f, indent=2)        
         return stats
     else:
-        with open(STATS_FILE, "r") as f:
+        with open(STATS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
 
 def clean_timestamp(timestamp):
