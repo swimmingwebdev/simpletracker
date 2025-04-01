@@ -1,5 +1,3 @@
 @Library('trackerPipeline') _
-trackerPipeline ([
-    serviceName = 'analyzer'
-    dockerhubRepo = 'swimminwebdev/analyzer'
-])
+
+trackerPipeline('analyzer', 'analyzer', 8110)
