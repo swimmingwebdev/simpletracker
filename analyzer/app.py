@@ -1,27 +1,27 @@
-import connexion
-from connexion import NoContent
-import yaml
-import logging.config
 import json
-import time
-from pykafka import KafkaClient
-from threading import Thread
-from pykafka.common import OffsetType
+import logging.config
 import os
+import time
+from threading import Thread
+import connexion
+import yaml
+from connexion import NoContent
 from connexion.middleware import MiddlewarePosition
+from pykafka import KafkaClient
+from pykafka.common import OffsetType
 from starlette.middleware.cors import CORSMiddleware
 
 # Configurations
-with open('/app/config/app_conf.yml', 'r') as f:
+with open('/app/config/app_conf.yml', 'r', encoding='utf-8') as f:
     app_config = yaml.safe_load(f.read())
 
 # Make sure the logs directory exists
-log_directory = "/app/logs"
-if not os.path.exists(log_directory):
-    os.makedirs(log_directory)
+LOG_DIRECTORY = "/app/logs"
+if not os.path.exists(LOG_DIRECTORY):
+    os.makedirs(LOG_DIRECTORY)
 
 # Logging
-with open('/config/log_conf.yml', 'r') as f:
+with open('/config/log_conf.yml', 'r', encoding='utf-8') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -106,7 +106,7 @@ def get_event_stats():
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON message.")
 
-    logger.info(f"Stats retrieved - GPS Events: {num_gps_events}, Alert Events: {num_alert_events}")
+    logger.info(f"Stats retrieved - GPS Events: %(gps)s, Alert Events: %(alerts)s")
     return {"num_gps_events": num_gps_events, "num_alert_events": num_alert_events}, 200
 
 def process_messages():
@@ -128,7 +128,7 @@ def process_messages():
                 try:
                     msg_str = msg.value.decode("utf-8")
                     msg = json.loads(msg_str)
-                    logger.info("Message: %s" % msg)
+                    logger.info("Message: %(msg)s", {"message": msg})
 
                 except json.JSONDecodeError:
                     logger.error("JSON Decoding Error")
