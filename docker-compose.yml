@@ -2,6 +2,7 @@ services:
   receiver:
     restart: always
     user: nobody
+    image: swimminwebdev/storage:latest
     deploy:
       replicas: 3
     build:
@@ -20,6 +21,7 @@ services:
   storage:
     restart: always
     user: nobody
+    image: swimminwebdev/storage:latest
     build:
       context: storage
       dockerfile: Dockerfile
@@ -37,6 +39,7 @@ services:
   processing:
     restart: always
     user: nobody
+    image: swimminwebdev/processing:latest
     build:
       context: processing
       dockerfile: Dockerfile
