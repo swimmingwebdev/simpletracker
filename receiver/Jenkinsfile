@@ -1,0 +1,3 @@
+@Library('trackerPipeline') _
+
+trackerPipeline('receiver', 'receiver', 8080)
