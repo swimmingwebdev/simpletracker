@@ -3,9 +3,9 @@ import logging.config
 import os
 import time
 from threading import Thread
+
 import connexion
 import yaml
-from connexion import NoContent
 from connexion.middleware import MiddlewarePosition
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
@@ -48,14 +48,14 @@ def get_trackGPS_reading(index):
 
             if data["type"] == "TrackGPS":
                 if counter == index:  
-                    logger.info(f"Found TrackGPS at index {index}: {data['payload']}")
+                    logger.info(f"Found TrackGPS at index %d: %s", index, data['payload'])
                     return data["payload"], 200
                 counter += 1 
 
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON message.")
 
-    logger.warning(f"No TrackGPS message at index {index}")
+    logger.warning(f"No TrackGPS message at index %d", index)
     return {"message": f"No TrackGPS message at index {index}"}, 404
 
 
@@ -74,7 +74,7 @@ def get_trackAlerts_reading(index):
 
             if data["type"] == "TrackAlerts":
                 if counter == index:  
-                    logger.info(f"Found TrackAlerts at index {index}: {data['payload']}")
+                    logger.info(f"Found TrackAlerts at index %d: %s", index, data['payload'])
                     return data["payload"], 200
                 counter += 1 
 
@@ -106,8 +106,11 @@ def get_event_stats():
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON message.")
 
-    logger.info(f"Stats retrieved - GPS Events: %(gps)s, Alert Events: %(alerts)s")
-    return {"num_gps_events": num_gps_events, "num_alert_events": num_alert_events}, 200
+    logger.info(f"Stats retrieved - GPS Events: %d, Alert Events: %d", num_gps_events, num_alert_events)
+    return {
+        "num_gps_events": num_gps_events, 
+        "num_alert_events": num_alert_events
+    }, 200
 
 def process_messages():
     while True:  # Keep the consumer running even if it crashes
@@ -127,23 +130,24 @@ def process_messages():
             for msg in consumer:
                 try:
                     msg_str = msg.value.decode("utf-8")
-                    msg = json.loads(msg_str)
-                    logger.info("Message: %(msg)s", {"message": msg})
+                    message = json.loads(msg_str)
+                    logger.info("Message: %s", message)
 
                 except json.JSONDecodeError:
                     logger.error("JSON Decoding Error")
 
                 consumer.commit_offsets()
 
-        except Exception as e:
-            logger.error(f"Kafka Consumer Error: {e}")
+        except Exception as err:
+            logger.error("Kafka Consumer Error: %s", err)
             time.sleep(5) 
         
 # to consume messages
 def setup_kafka_thread():
-    t1 = Thread(target=process_messages)
-    t1.setDaemon(True)
-    t1.start()
+    thread = Thread(target=process_messages)
+    thread.daemon = True
+    thread.start()
+
 
 app = connexion.FlaskApp(__name__, specification_dir='.')
 app.add_api("openapi.yml", base_path="/analyzer", strict_validation=True, validate_responses=True)
