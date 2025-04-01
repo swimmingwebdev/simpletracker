@@ -55,6 +55,7 @@ services:
   analyzer:
     restart: always
     user: nobody
+    image: swimminwebdev/analyzer:latest
     build:
       context: analyzer
       dockerfile: Dockerfile
