@@ -106,7 +106,10 @@ def get_event_stats():
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON message.")
 
-    logger.info(f"Stats retrieved - GPS Events: %d, Alert Events: %d", num_gps_events, num_alert_events)
+    logger.info(
+    "Stats retrieved - GPS Events: %d, Alert Events: %d",
+    num_gps_events, num_alert_events
+    )
     return {
         "num_gps_events": num_gps_events, 
         "num_alert_events": num_alert_events
