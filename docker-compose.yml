@@ -2,7 +2,7 @@ services:
   receiver:
     restart: always
     user: nobody
-    image: swimminwebdev/storage:latest
+    image: swimminwebdev/receiver:latest
     deploy:
       replicas: 3
     build:
