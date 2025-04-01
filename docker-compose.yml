@@ -73,7 +73,6 @@ services:
   
   dashboard:
     restart: always
-    user: nobody
     build:
       context: dashboard
       dockerfile: Dockerfile
