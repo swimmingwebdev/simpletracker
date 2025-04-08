@@ -106,23 +106,6 @@ const fetchAlertEvent = () => {
         });
 };
 
-document.getElementById("consistency-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    fetch(CONSISTENCY_CHECK_API, {
-        method: "POST"
-    })
-    .then(res => res.json())
-    .then(data => {
-        const resultElem = document.getElementById("consistency-result");
-        resultElem.innerText = `Consistency Check Completed.\nProcessing Time: ${data.processing_time_ms} ms`;
-    })
-    .catch(err => {
-        document.getElementById("consistency-result").innerText = "Error running consistency check.";
-        console.error(err);
-    });
-});
-
 const updateErrorMessages = (message) => {
     const id = Date.now()
     console.log("Creation", id)
@@ -144,6 +127,24 @@ const setup = () => {
 
     document.getElementById("fetch-gps-btn").addEventListener("click", fetchGpsEvent);
     document.getElementById("fetch-alert-btn").addEventListener("click", fetchAlertEvent);
+
+    //consistency_check button
+    document.getElementById("consistency-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        fetch(CONSISTENCY_CHECK_API, {
+            method: "POST"
+        })
+        .then(res => res.json())
+        .then(data => {
+            const resultElem = document.getElementById("consistency-result");
+            resultElem.innerText = `Consistency Check Completed.\nProcessing Time: ${data.processing_time_ms} ms`;
+        })
+        .catch(err => {
+            document.getElementById("consistency-result").innerText = "Error running consistency check.";
+            console.error(err);
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', setup)
