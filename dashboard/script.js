@@ -139,6 +139,9 @@ const fetchConsistencyCheck = (e) => {
             results += `  Alerts: ${dbQueueAlertDiff > 0 ? '+' : ''}${dbQueueAlertDiff}\n`;
             results += `  GPS: ${dbQueueGpsDiff > 0 ? '+' : ''}${dbQueueGpsDiff}\n\n`;
 
+            const dbProcessingAlertDiff = data.counts.db.alerts - data.counts.processing.alerts;
+            const dbProcessingGpsDiff = data.counts.db.gps - data.counts.processing.gps;
+
             results += "Database vs Processing:\n";
             results += `  Alerts: ${dbProcessingAlertDiff > 0 ? '+' : ''}${dbProcessingAlertDiff}\n`;
             results += `  GPS: ${dbProcessingGpsDiff > 0 ? '+' : ''}${dbProcessingGpsDiff}\n\n`;
