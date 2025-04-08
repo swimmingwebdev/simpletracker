@@ -47,9 +47,9 @@ def save_results(data):
     with open(CHECKS_FILE, 'w') as f:
         json.dump(data, f, indent=2)
 
-# to create a key for an event based on device_id, timestamp, and trace_id
+# to create a key for an event based on trace_id
 def event_key(event):
-    return (event.get("device_id"), event.get("timestamp"), event.get("trace_id"))
+    return event.get("trace_id")
 
 # Fetch analyzer queue data
 async def fetch_all_analyzer_events(analyzer_url, event_type):

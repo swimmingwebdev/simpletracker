@@ -127,6 +127,10 @@ const fetchConsistencyCheck = (e) => {
             results += `  Alerts: ${data.counts.queue.alerts}\n`;
             results += `  GPS: ${data.counts.queue.gps}\n\n`;
 
+            results += "Processing Service:\n";
+            results += `  Alerts: ${data.counts.processing.alerts}\n`;
+            results += `  GPS: ${data.counts.processing.gps}\n\n`;
+
             // Compare database vs queue
             const dbQueueAlertDiff = data.counts.db.alerts - data.counts.queue.alerts;
             const dbQueueGpsDiff = data.counts.db.gps - data.counts.queue.gps;
@@ -134,6 +138,10 @@ const fetchConsistencyCheck = (e) => {
             results += "Database vs Queue:\n";
             results += `  Alerts: ${dbQueueAlertDiff > 0 ? '+' : ''}${dbQueueAlertDiff}\n`;
             results += `  GPS: ${dbQueueGpsDiff > 0 ? '+' : ''}${dbQueueGpsDiff}\n\n`;
+
+            results += "Database vs Processing:\n";
+            results += `  Alerts: ${dbProcessingAlertDiff > 0 ? '+' : ''}${dbProcessingAlertDiff}\n`;
+            results += `  GPS: ${dbProcessingGpsDiff > 0 ? '+' : ''}${dbProcessingGpsDiff}\n\n`;
 
             results += "Missing events:\n";
             // Events not in db
