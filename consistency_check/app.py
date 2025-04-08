@@ -90,9 +90,23 @@ async def run_consistency_checks():
                 "start_timestamp": "2000-01-01T00:00:00Z", "end_timestamp": now
             })).json()
 
-        # Access all queue event IDs from analyzer
+        # Safety checks: ensure both are lists before merging
+        if not isinstance(gps_db, list):
+            logger.error("gps_db is not a list. Got: %s", type(gps_db))
+            gps_db = []
+        if not isinstance(alerts_db, list):
+            logger.error("alerts_db is not a list. Got: %s", type(alerts_db))
+            alerts_db = []
+
         gps_queue = await fetch_all_analyzer_events(ANALYZER_URL, "locations")
         alerts_queue = await fetch_all_analyzer_events(ANALYZER_URL, "alerts")
+
+        if not isinstance(gps_queue, list):
+            logger.error("gps_queue is not a list. Got: %s", type(gps_queue))
+            gps_queue = []
+        if not isinstance(alerts_queue, list):
+            logger.error("alerts_queue is not a list. Got: %s", type(alerts_queue))
+            alerts_queue = []
 
         # Compare for mismatches
         all_db = {event_key(e): e for e in gps_db + alerts_db}
