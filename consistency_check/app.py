@@ -91,10 +91,10 @@ async def run_consistency_checks():
             processing_stats = (await client.get(f"{PROCESSING_URL}/stats")).json()
 
             gps_db_response = await client.get(f"{STORAGE_URL}/track/locations", params={
-                "start_timestamp": default_start, "end_timestamp": now
+                "start_timestamp": default_start, "end_timestamp": now, "limit": 100
             })
             alerts_db_response = await client.get(f"{STORAGE_URL}/track/alerts", params={
-                "start_timestamp": default_start, "end_timestamp": now
+                "start_timestamp": default_start, "end_timestamp": now, "limit": 100
             })
 
             gps_db = gps_db_response.json() if gps_db_response.status_code == 200 else []
