@@ -8,6 +8,7 @@ const ANALYZER_API = {
     trackAlerts: `http://${CLOUD_VM_DNS}/analyzer/track/alerts`
 }
 const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency_check/checks`
+const TRIGGER_CONSISTENCY_API = `http://${CLOUD_VM_DNS}/consistency_check/update`
 
 // This function fetches and updates the general statistics
 const makeReq = (url, cb) => {
@@ -113,7 +114,17 @@ const fetchConsistencyCheck = (e) => {
     const resultElem = document.getElementById("consistency-result");
     resultElem.innerText = "Running consistency check...";
 
-    fetch(CONSISTENCY_CHECK_API)
+        // POST /update
+        fetch(TRIGGER_CONSISTENCY_API, {
+            method: "POST"
+        })
+        .then(updateRes => {
+            if (!updateRes.ok) {
+                throw new Error("Failed to run consistency check.");
+            }
+            // GET /checks
+            return fetch(CONSISTENCY_CHECK_API);
+        })
         .then(res => res.json())
         .then(data => {
 
