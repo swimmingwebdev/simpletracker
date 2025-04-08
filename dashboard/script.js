@@ -15,7 +15,7 @@ const makeReq = (url, cb) => {
     fetch(url)
         .then(res => res.json())
         .then((result) => {
-            console.log("Received data: ", result)
+            // console.log("Received data: ", result)
             cb(result);
         }).catch((error) => {
             updateErrorMessages(error.message)
@@ -115,23 +115,15 @@ const fetchConsistencyCheck = (e) => {
     resultElem.innerText = "Running consistency check...";
 
         // POST /update
-        fetch(TRIGGER_CONSISTENCY_API, {
-            method: "POST"
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to run consistency check.");
-            }
-        })
-        .then(() => {
-            // GET /checks 
-            return fetch(CONSISTENCY_CHECK_API);
-        })
+    fetch(TRIGGER_CONSISTENCY_API, { method: "POST" })
         .then(res => {
-            if (!res.ok) {
-                throw new Error("Failed to fetch check results.");
-            }
-            return res.json();
+        if (!res.ok) throw new Error("Failed to run consistency check.");
+        return res.json();
+        })
+        .then(() => fetch(CONSISTENCY_CHECK_API))
+        .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch check results.");
+        return res.json();
         })
         .then(data => {
 
