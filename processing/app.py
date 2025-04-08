@@ -64,7 +64,7 @@ def clean_timestamp(timestamp):
     
 async def populate_stats():
     logger.info("Periodic processing has started")
-
+    logger.info("Periodic processing has started again.")
     try:
         stats = initialize_stats()
 
