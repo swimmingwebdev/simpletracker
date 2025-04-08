@@ -80,7 +80,10 @@
         </div>
 
         <div class="mt-4 p-4 bg-gray-800 rounded-lg w-full">
-            <h3 class="text-lg font-semibold">Run Consistency Check</h3>
+            <h3 class="text-lg font-semibold">System Consistency Check</h3>
+            <p class="text-sm text-gray-400 mt-1">
+                Verify event counts between DB, processing service, and queue. 
+            </p>
             <div class="mt-3 bg-gray-800 rounded-lg w-full">
                 <form id="consistency-form">
                     <button type="submit" 
@@ -88,9 +91,10 @@
                         Run Consistency Check
                     </button>
                 </form>
-                <pre id="consistency-result" class="mt-4 p-3 bg-gray-900 text-green-400 text-sm">Not yet run</pre>
+                <pre id="consistency-result" class="mt-4 p-3 bg-gray-900 text-green-400 text-sm overflow-auto max-h-96">Not yet run</pre>
             </div>
         </div>
+
         <div id="messages"></div>
     </main>
 </body>

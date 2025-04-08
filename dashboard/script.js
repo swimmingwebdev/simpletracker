@@ -7,7 +7,7 @@ const ANALYZER_API = {
     trackGPS: `http://${CLOUD_VM_DNS}/analyzer/track/locations`,
     trackAlerts: `http://${CLOUD_VM_DNS}/analyzer/track/alerts`
 }
-const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency_check/update`
+const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency_check/checks`
 
 // This function fetches and updates the general statistics
 const makeReq = (url, cb) => {
@@ -106,6 +106,56 @@ const fetchAlertEvent = () => {
         });
 };
 
+const fetchConsistencyCheck = (e) => {
+
+    e.preventDefault();
+
+    const resultElem = document.getElementById("consistency-result");
+    resultElem.innerText = "Running consistency check...";
+
+    fetch(CONSISTENCY_CHECK_API)
+        .then(res => res.json())
+        .then(data => {
+
+            let results = "Consistency Check Results:\n\n";
+
+            results += "MySQL Database:\n";
+            results += `  Alerts: ${data.counts.db.alerts}\n`;
+            results += `  GPS: ${data.counts.db.gps}\n\n`;
+            
+            results += "Queue in Kafka:\n";
+            results += `  Alerts: ${data.counts.queue.alerts}\n`;
+            results += `  GPS: ${data.counts.queue.gps}\n\n`;
+
+            // Compare database vs queue
+            const dbQueueAlertDiff = data.counts.db.alerts - data.counts.queue.alerts;
+            const dbQueueGpsDiff = data.counts.db.gps - data.counts.queue.gps;
+            
+            results += "Database vs Queue:\n";
+            results += `  Alerts: ${dbQueueAlertDiff > 0 ? '+' : ''}${dbQueueAlertDiff}\n`;
+            results += `  GPS: ${dbQueueGpsDiff > 0 ? '+' : ''}${dbQueueGpsDiff}\n\n`;
+
+            results += "Missing events:\n";
+            // Events not in db
+            const notInDbCount = data.not_in_db ? data.not_in_db.length : 0;
+            results += `Events in queue but not in database: ${notInDbCount}\n`;
+            
+            // Events not in queue
+            const notInQueueCount = data.not_in_queue ? data.not_in_queue.length : 0;
+            results += `Events in database but not in queue: ${notInQueueCount}\n\n`;
+            
+            results += `Processing Time: ${data.processing_time_ms} ms\n`;
+
+            results += `Last checked: ${data.last_updated}`;
+            
+            resultElem.innerText = results;
+        })
+        .catch(err => {
+            resultElem.innerText = "Error running consistency check: " + err.message;
+            console.error(err);
+        });
+}
+
 const updateErrorMessages = (message) => {
     const id = Date.now()
     console.log("Creation", id)
@@ -129,22 +179,7 @@ const setup = () => {
     document.getElementById("fetch-alert-btn").addEventListener("click", fetchAlertEvent);
 
     //consistency_check button
-    document.getElementById("consistency-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        fetch(CONSISTENCY_CHECK_API, {
-            method: "POST"
-        })
-        .then(res => res.json())
-        .then(data => {
-            const resultElem = document.getElementById("consistency-result");
-            resultElem.innerText = `Consistency Check Completed.\nProcessing Time: ${data.processing_time_ms} ms`;
-        })
-        .catch(err => {
-            document.getElementById("consistency-result").innerText = "Error running consistency check.";
-            console.error(err);
-        });
-    });
+    document.getElementById("consistency-form").addEventListener("submit", fetchConsistencyCheck);
 }
 
 document.addEventListener('DOMContentLoaded', setup)
