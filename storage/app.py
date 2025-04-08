@@ -1,20 +1,21 @@
-import connexion
-from connexion import NoContent
-from models import Base, TrackAlerts, TrackLocations
-from sqlalchemy import create_engine, select, text
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime, timezone
-import yaml
-import logging.config
+import os
 import json
 import time
-from pykafka import KafkaClient
+import logging.config
+from datetime import datetime
 from threading import Thread
+
+import connexion
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import sessionmaker
+from pykafka import KafkaClient
 from pykafka.common import OffsetType
-import os
+import yaml
+
+from models import Base, TrackAlerts, TrackLocations
 
 # Configurations
-with open('/app/config/app_conf.yml', 'r') as f:
+with open('/app/config/app_conf.yml', 'r', encoding='utf-8') as f:
     app_config = yaml.safe_load(f.read())
 
 # Make sure the logs directory exists
@@ -23,7 +24,7 @@ if not os.path.exists(log_directory):
     os.makedirs(log_directory)
 
 # Logging
-with open('/config/log_conf.yml', 'r') as f:
+with open('/config/log_conf.yml', 'r', encoding='utf-8') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -58,7 +59,8 @@ for i in range(MAX_RETRIES):
         time.sleep(5)
 else:
     logger.error("MySQL connection failed after retries.")
-    exit(1)
+    import sys
+    sys.exit(1)
 
 def make_session():
     return sessionmaker(bind=engine)()
