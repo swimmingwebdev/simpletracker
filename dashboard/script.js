@@ -118,14 +118,21 @@ const fetchConsistencyCheck = (e) => {
         fetch(TRIGGER_CONSISTENCY_API, {
             method: "POST"
         })
-        .then(updateRes => {
-            if (!updateRes.ok) {
+        .then(response => {
+            if (!response.ok) {
                 throw new Error("Failed to run consistency check.");
             }
-            // GET /checks
+        })
+        .then(() => {
+            // GET /checks 
             return fetch(CONSISTENCY_CHECK_API);
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch check results.");
+            }
+            return res.json();
+        })
         .then(data => {
 
             let results = "Consistency Check Results:\n\n";
