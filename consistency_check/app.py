@@ -49,7 +49,7 @@ def save_results(data):
 
 # to create a key for an event based on trace_id
 def event_key(event):
-    return f"{event.get('device_id')}_{event.get('timestamp')}_{event.get('location_name')}"
+    return str(event.get("trace_id"))
 
 # Fetch analyzer queue data
 async def fetch_all_analyzer_events(analyzer_url, event_type):
