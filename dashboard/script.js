@@ -7,7 +7,7 @@ const ANALYZER_API = {
     trackGPS: `http://${CLOUD_VM_DNS}/analyzer/track/locations`,
     trackAlerts: `http://${CLOUD_VM_DNS}/analyzer/track/alerts`
 }
-const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency/update`
+const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency_check/update`
 
 // This function fetches and updates the general statistics
 const makeReq = (url, cb) => {

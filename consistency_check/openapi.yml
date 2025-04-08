@@ -47,10 +47,10 @@ components:
   schemas:
     Checks:
       required:
-      - counts
-      - not_in_db
-      - not_in_queue
-      - last_updated
+        - counts
+        - not_in_db
+        - not_in_queue
+        - last_updated
       type: object
       properties:
         last_updated:
@@ -83,39 +83,40 @@ components:
         not_in_db:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            $ref: '#/components/schemas/EventReference'
         not_in_queue:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            $ref: '#/components/schemas/EventReference'
 
-EventReference:
-  type: object
-  required:
-    - device_id
-    - latitude
-    - longitude
-    - location_name
-    - timestamp
-    - trace_id
-  properties:
-    device_id:
-      type: string
-      format: uuid
-    latitude:
-      type: number
-      format: float
-    longitude:
-      type: number
-      format: float
-    location_name:
-      type: string
-    timestamp:
-      type: string
-      format: date-time
-    trace_id:
-      type: integer
-    alert_desc:
-      type: string
-      description: Only included for alert events
+    EventReference:
+      type: object
+      required:
+        - device_id
+        - latitude
+        - longitude
+        - location_name
+        - timestamp
+        - trace_id
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        location_name:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        trace_id:
+          type: integer
+        alert_desc:
+          type: string
+          description: Only included for alert events
+
 
