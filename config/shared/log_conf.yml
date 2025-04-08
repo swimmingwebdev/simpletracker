@@ -35,7 +35,12 @@ loggers:
   processingLogger:
     level: DEBUG
     handlers: [console, file]
-    propagate: no        
+    propagate: no     
+
+  consistencyLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no      
 
 root:
   level: DEBUG

@@ -115,6 +115,36 @@ def get_event_stats():
         "num_alert_events": num_alert_events
     }, 200
 
+def get_all_event_ids():
+    """Returns all event_id and trace_id pairs from the Kafka queue."""
+    client = KafkaClient(hosts=f"{KAFKA_HOSTNAME}:{KAFKA_PORT}")
+    topic = client.topics[KAFKA_TOPIC.encode()]
+    consumer = topic.get_simple_consumer(reset_offset_on_start=True, consumer_timeout_ms=1000)
+
+    results = []
+    logger.info("Kafka Consumer started, collecting all event_id and trace_id")
+
+    for msg in consumer:
+        try:
+            message = msg.value.decode("utf-8")
+            data = json.loads(message)
+
+            event_type = data.get("type", "Unknown")
+            payload = data.get("payload", {})
+
+            results.append({
+                "event_id": payload.get("device_id", ""),   # Replace with actual event_id field if different
+                "trace_id": payload.get("trace_id", ""),
+                "type": event_type
+            })
+        except json.JSONDecodeError:
+            logger.warning("Skipping invalid JSON message")
+        except Exception as e:
+            logger.error(f"Error processing message: {e}")
+
+    logger.info(f"Collected {len(results)} total event IDs from queue")
+    return results, 200
+
 def process_messages():
     while True:  # Keep the consumer running even if it crashes
         try:

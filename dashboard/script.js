@@ -7,6 +7,7 @@ const ANALYZER_API = {
     trackGPS: `http://${CLOUD_VM_DNS}/analyzer/track/locations`,
     trackAlerts: `http://${CLOUD_VM_DNS}/analyzer/track/alerts`
 }
+const CONSISTENCY_CHECK_API = `http://${CLOUD_VM_DNS}/consistency/update`
 
 // This function fetches and updates the general statistics
 const makeReq = (url, cb) => {
@@ -105,6 +106,22 @@ const fetchAlertEvent = () => {
         });
 };
 
+document.getElementById("consistency-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    fetch(CONSISTENCY_CHECK_API, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        const resultElem = document.getElementById("consistency-result");
+        resultElem.innerText = `Consistency Check Completed.\nProcessing Time: ${data.processing_time_ms} ms`;
+    })
+    .catch(err => {
+        document.getElementById("consistency-result").innerText = "Error running consistency check.";
+        console.error(err);
+    });
+});
 
 const updateErrorMessages = (message) => {
     const id = Date.now()

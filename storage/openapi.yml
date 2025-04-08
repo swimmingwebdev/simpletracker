@@ -74,6 +74,46 @@ paths:
                   $ref: '#/components/schemas/TrackAlerts'
         "400":
           description: Invalid input, object invalid.
+  /stats:
+    get:
+      summary: Get number of events
+      operationId: app.get_event_stats
+      description: Get count of GPS and alert events from DB
+      responses:
+        '200':
+          description: Event counts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  num_gps_events:
+                    type: integer
+                    example: 100
+                  num_alert_events:
+                    type: integer
+                    example: 50
+  /track/ids:
+    get:
+      summary: Get all event IDs and trace IDs
+      operationId: app.get_event_ids
+      description: Retrieve all device IDs (event_id) and trace IDs
+      responses:
+        '200':
+          description: List of event-trace ID pairs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    event_id:
+                      type: string
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    trace_id:
+                      type: integer
+                      example: 123456
 
 components:
   schemas:

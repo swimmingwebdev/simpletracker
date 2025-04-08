@@ -87,6 +87,27 @@ services:
       - processing
       - analyzer
 
+  consistency_check:
+    restart: always
+    user: nobody
+    build:
+      context: consistency_check
+      dockerfile: Dockerfile
+    expose:
+      - "8120"
+    volumes:
+      - ./config/consistency_check:/app/config
+      - ./config/shared/log_conf.yml:/config/log_conf.yml
+      - ./logs/consistency_check:/app/logs
+      - ./data/consistency_check:/app/data
+    environment:
+      CORS_ALLOW_ALL: no
+    depends_on:
+      - storage
+      - analyzer
+      - processing
+      - kafka  
+
   zookeeper:
     container_name: zookeeper
     image: wurstmeister/zookeeper

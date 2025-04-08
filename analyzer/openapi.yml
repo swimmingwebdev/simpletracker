@@ -10,7 +10,7 @@ info:
 paths:
   /track/locations:
     get:
-      summary: Get a location tracking data from histroy
+      summary: Get a location tracking data from history
       operationId: app.get_trackGPS_reading      
       description: Retrieves all GPS tracking data readings from the event store
       parameters:
@@ -27,7 +27,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TrackGPSReading'
-        '400':
+        "400":
           description: Invalid request
           content:
             application/json:
@@ -36,7 +36,7 @@ paths:
                 properties:
                   message:
                     type: string
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -48,9 +48,9 @@ paths:
 
   /track/alerts:
     get:  
-      summary: Get alert events reading from histroy
+      summary: Get alert events reading from history
       operationId: app.get_trackAlerts_reading
-      description: Retrieves all alert events reding from the evnet store
+      description: Retrieves all alert events reading from the event store
       parameters:
         - name: index
           in: query
@@ -74,7 +74,7 @@ paths:
                 properties:
                   message:
                     type: string
-        '404':
+        "404":
           description: Not Found
           content:
             application/json:
@@ -90,15 +90,46 @@ paths:
       operationId: app.get_event_stats
       description: Retrieves statistics about the events
       responses:
-        '200':
+        "200":
           description: Successfully returned event statistics
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stats'
 
+  /ids:
+    get:
+      summary: Get all event IDs and trace IDs from Kafka queue
+      operationId: app.get_all_event_ids
+      description: Returns a list of event_id and trace_id pairs for all events
+      responses:
+        "200":
+          description: Successfully retrieved ID list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventIDEntry'
+
 components:
   schemas:
+    EventIDEntry:
+      type: object
+      properties:
+        event_id:
+          type: string
+          description: ID of the event
+          example: "12345"
+        trace_id:
+          type: string
+          description: Unique trace ID of the event
+          example: "abc-123"
+        type:
+          type: string
+          description: Event type
+          example: "TrackGPS"
+
     TrackGPSReading:
       type: object
       required:
@@ -110,8 +141,8 @@ components:
       properties:
         device_id:
           type: string
-          description: Unique identifier for the tracking device.
           format: uuid
+          description: Unique identifier for the tracking device.
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         latitude:
           type: number
@@ -129,10 +160,10 @@ components:
           example: "Downtown Vancouver"
         timestamp:
           type: string
-          description: The date and time when the location was tracked.
           format: date-time
+          description: The date and time when the location was tracked.
           example: 2025-01-07T12:34:56.001Z
-    
+
     TrackAlertsReading:
       type: object
       required:
@@ -145,8 +176,8 @@ components:
       properties:
         device_id:
           type: string
-          description: Unique identifier for the device reporting the alert.
           format: uuid
+          description: Unique identifier for the device reporting the alert.
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         latitude:
           type: number
@@ -168,15 +199,15 @@ components:
           example: "Unexpected movement detected."
         timestamp:
           type: string
-          description: The date and time when the alert was recorded.
           format: date-time
+          description: The date and time when the alert was recorded.
           example: 2025-01-07T12:34:56.001Z
 
     Stats:
       type: object
       required:
-      - num_gps_events
-      - num_alert_events
+        - num_gps_events
+        - num_alert_events
       properties:
         num_gps_events:
           type: integer

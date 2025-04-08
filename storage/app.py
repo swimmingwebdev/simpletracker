@@ -126,6 +126,33 @@ def get_trackAlerts(start_timestamp, end_timestamp):
     finally:
         session.close()
 
+def get_event_stats():
+    session = make_session()
+    try:
+        gps_count = session.query(TrackLocations).count()
+        alert_count = session.query(TrackAlerts).count()
+        return {
+            "num_gps_events": gps_count,
+            "num_alert_events": alert_count
+        }, 200
+    except Exception as e:
+        logger.error(f"Error counting events: {e}")
+        return {"message": "Internal error"}, 500
+    finally:
+        session.close()
+
+def get_event_ids():
+    session = make_session()
+    try:
+        gps = session.query(TrackLocations.device_id, TrackLocations.trace_id).all()
+        alerts = session.query(TrackAlerts.device_id, TrackAlerts.trace_id).all()
+        combined = [{"event_id": e[0], "trace_id": e[1]} for e in gps + alerts]
+        return combined, 200
+    except Exception as e:
+        logger.error(f"Error fetching event IDs: {e}")
+        return {"message": "Internal error"}, 500
+    finally:
+        session.close()
 
 def process_messages():
     """ Process event messages """
