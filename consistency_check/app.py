@@ -68,54 +68,55 @@ async def fetch_all_analyzer_events(analyzer_url, event_type):
                 break
     return results
 
+def clean_timestamp(ts):
+    try:
+        return datetime.fromisoformat(ts).astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    except Exception as e:
+        logger.error(f"Invalid timestamp format: {ts}. Resetting to default.")
+        return "2000-01-01T00:00:00Z"
+
 # POST /update
 async def run_consistency_checks():
     logger.info("Running consistency check")
     start_time = datetime.now()
 
     try:
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        default_start = "2000-01-01T00:00:00Z"
 
         async with httpx.AsyncClient() as client:
+            # Fetch stats from analyzer/storage/processing
             analyzer_stats = (await client.get(f"{ANALYZER_URL}/stats")).json()
             storage_stats = (await client.get(f"{STORAGE_URL}/stats")).json()
             processing_stats = (await client.get(f"{PROCESSING_URL}/stats")).json()
 
-        # Access all DB event IDs from storage
-        async with httpx.AsyncClient() as client:
-            gps_db = (await client.get(f"{STORAGE_URL}/track/locations", params={
-                "start_timestamp": "2000-01-01T00:00:00Z", "end_timestamp": now
-            })).json()
-            alerts_db = (await client.get(f"{STORAGE_URL}/track/alerts", params={
-                "start_timestamp": "2000-01-01T00:00:00Z", "end_timestamp": now
-            })).json()
+            # Fetch DB events from storage
+            gps_db_resp = await client.get(f"{STORAGE_URL}/track/locations", params={
+                "start_timestamp": default_start, "end_timestamp": now
+            })
+            alerts_db_resp = await client.get(f"{STORAGE_URL}/track/alerts", params={
+                "start_timestamp": default_start, "end_timestamp": now
+            })
 
-        # Safety checks: ensure both are lists before merging
-        if not isinstance(gps_db, list):
-            logger.error("gps_db is not a list. Got: %s", type(gps_db))
-            gps_db = []
-        if not isinstance(alerts_db, list):
-            logger.error("alerts_db is not a list. Got: %s", type(alerts_db))
-            alerts_db = []
+            gps_db = gps_db_resp.json() if gps_db_resp.status_code == 200 else []
+            alerts_db = alerts_db_resp.json() if alerts_db_resp.status_code == 200 else []
+
+        # Type safety
+        if not isinstance(gps_db, list): gps_db = []
+        if not isinstance(alerts_db, list): alerts_db = []
 
         gps_queue = await fetch_all_analyzer_events(ANALYZER_URL, "locations")
         alerts_queue = await fetch_all_analyzer_events(ANALYZER_URL, "alerts")
 
-        if not isinstance(gps_queue, list):
-            logger.error("gps_queue is not a list. Got: %s", type(gps_queue))
-            gps_queue = []
-        if not isinstance(alerts_queue, list):
-            logger.error("alerts_queue is not a list. Got: %s", type(alerts_queue))
-            alerts_queue = []
+        if not isinstance(gps_queue, list): gps_queue = []
+        if not isinstance(alerts_queue, list): alerts_queue = []
 
-        # Compare for mismatches
         all_db = {event_key(e): e for e in gps_db + alerts_db}
         all_queue = {event_key(e): e for e in gps_queue + alerts_queue}
 
         not_in_db = [v for k, v in all_queue.items() if k not in all_db]
         not_in_queue = [v for k, v in all_db.items() if k not in all_queue]
 
-        # Save results
         result = {
             "last_updated": now,
             "counts": {
@@ -137,7 +138,6 @@ async def run_consistency_checks():
         }
 
         save_results(result)
-
         processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
         return {"processing_time_ms": processing_time}, 200
 
