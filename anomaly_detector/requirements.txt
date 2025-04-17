@@ -1,0 +1,6 @@
+connexion[flask]
+connexion[uvicorn]
+connexion[swagger-ui]
+httpx
+pyyaml
+starlette

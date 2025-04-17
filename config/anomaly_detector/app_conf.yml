@@ -1,0 +1,16 @@
+---
+datastore: /app/data/anomaly.json
+
+analyzer:
+  url: http://analyzer:8110/analyzer
+
+storage:
+  url: http://storage:8090/storage
+  
+processing:
+  url: http://processing:8100/processing
+
+events:
+  hostname: kafka
+  port: 29092
+  topic: events

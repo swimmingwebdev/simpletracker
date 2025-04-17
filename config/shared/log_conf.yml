@@ -40,7 +40,12 @@ loggers:
   consistencyLogger:
     level: DEBUG
     handlers: [console, file]
-    propagate: no      
+    propagate: no     
+
+  anomalyLogger:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no    
 
 root:
   level: DEBUG

@@ -107,6 +107,27 @@ services:
       - analyzer
       - processing
       - kafka  
+  
+  anomaly_detector:
+    restart: always
+    user: nobody
+    build:
+      context: anomaly_detector
+      dockerfile: Dockerfile
+    expose:
+      - "8130"
+    volumes:
+      - ./config/anomaly_detector:/app/config
+      - ./config/shared/log_conf.yml:/config/log_conf.yml
+      - ./logs/anomaly_detector:/app/logs
+      - ./data/anomaly_detector:/app/data
+    environment:
+      CORS_ALLOW_ALL: no
+    depends_on:
+      - storage
+      - analyzer
+      - processing
+      - kafka  
 
   zookeeper:
     container_name: zookeeper
